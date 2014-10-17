@@ -1,0 +1,36 @@
+{
+  "name": "ng-scroller",
+  "version": "0.0.1",
+  "description": "Infinite scroller for angularjs",
+  "main": "gulpfile.js",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "~3.8.8",
+    "mocha": "^1.21.5",
+    "gulp-mocha": "^1.1.1",
+    "should": "^4.0.4",
+    "gulp-uglify": "^1.0.1",
+    "gulp-ng-annotate": "^0.3.3",
+    "gulp-livereload": "^2.1.1",
+    "gulp-watch": "^1.1.0",
+    "gulp-jshint": "^1.8.5",
+    "del": "^0.1.3"
+  },
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/brocksamson/ng-scroller.git"
+  },
+  "keywords": [
+    "angularjs",
+    "scroller"
+  ],
+  "author": "Matthew Miller",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brocksamson/ng-scroller/issues"
+  },
+  "homepage": "https://github.com/brocksamson/ng-scroller"
+}
