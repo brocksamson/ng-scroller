@@ -1,5 +1,5 @@
 var gulp = require('gulp');
-var mocha = require('gulp-mocha');
+var mochaPhantomJS = require('gulp-mocha-phantomjs');
 var uglify = require('gulp-uglify');
 var ngAnnotate = require('gulp-ng-annotate');
 var livereload = require('gulp-livereload');
@@ -22,13 +22,8 @@ gulp.task('build', ['clean'], function(){
 });
 
 gulp.task('test', function(){
-    return gulp.src(['test/test-*.js'], { read: false })
-        .pipe(mocha({
-            reporter: 'spec',
-            globals: {
-                should: require('should')
-            }
-        }));
+    return gulp.src(['test/runner.html'])
+        .pipe(mochaPhantomJS());
 });
 
 gulp.task('watch', function(){
