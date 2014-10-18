@@ -9,11 +9,13 @@
   </head>
   <body>
     <div id="mocha"></div>
+    <!-- TODO: These should be maintained within the gulpfile & templated in -->
     <script src="../node_modules/mocha/mocha.js"></script>
     <script src="../node_modules/should/should.js"></script>
     <script>mocha.setup('bdd')</script>
     <script src="../node_modules/angular/angular.js"></script>
     <script src="../node_modules/angular-mocks/angular-mocks.js"></script>
+    <script src="../src/scroller.js"></script>
     <script src="test-scroller.js"></script>
     <script>
       if (window.mochaPhantomJS) {

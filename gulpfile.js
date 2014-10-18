@@ -26,8 +26,8 @@ gulp.task('test', function(){
         .pipe(mochaPhantomJS());
 });
 
-gulp.task('watch', function(){
-    livereload.listen();
+gulp.task('watch', ['build', 'test'], function(){
+    // livereload.listen();
     gulp.watch(['test/*.js', 'src/*.js'], ['build', 'test'])
-    .on('change', livereload.changed);
+    // .on('change', livereload.changed);
 });
