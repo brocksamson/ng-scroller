@@ -13,7 +13,8 @@ angular.module('infinity-scroller', [])
             throw new Error('Expected infinityScroll in form of \'_item_ in _datasource_\' but got \'' + sourceString + '\'');
         }
         var dataSourceName = match[2];
-        var dataSource = $parse(dataSourceName);
+        var getter = $parse(dataSourceName);
+        var  dataSource = getter(scope);
         if(!isDataSource(dataSource)){
             try {
                 dataSource = $injector.get(dataSourceName);
@@ -28,8 +29,20 @@ angular.module('infinity-scroller', [])
         dataSource.$$itemName = match[1];
         return dataSource;
     }
-    function linkFun(scope, element, attrs, controller, trancludeFun){
+    function linkFun(scope, element, attrs, controller, transcludeFun){
         var dataSource = getDataSource(scope, attrs.infinityScroll);
+        var items = dataSource.get(0, 9);
+        for (var i = 0; i < items.length; i++) {
+            transcludeFun(function(clone, innerScope){
+                innerScope[dataSource.$$itemName] = items[i];
+                innerScope.$first = i === 0;
+                innerScope.$last = i === (items.length - 1);
+                // jshint bitwise: false
+                innerScope.$odd = !(innerScope.$even = (i&1) === 0);
+                // jshint bitwise: true
+                element.after(clone);
+            });
+        }
     }
     return {
         restrict: 'A',

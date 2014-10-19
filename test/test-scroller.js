@@ -1,5 +1,5 @@
 describe('ng-scroller', function(){
-    var scope, compileElement;
+    var scope, compileElement, element;
     beforeEach(function(){
         module('infinity-scroller');
         inject(function($rootScope, $compile){
@@ -12,9 +12,47 @@ describe('ng-scroller', function(){
             };
         });
     });
+    describe('initial load 1 item', function(){
+        var elemHtml;
+        beforeEach(function(){
+            scope.items = {
+                get: function(first, last){
+                    return [{
+                        id: 1,
+                        name: 'name1'
+                    }];
+                }
+            };
+            var htmlString = '<div><div infinity-scroll="item in items">' +
+                'name:{{item.name}}:end' +
+                'first:{{$first}}:end' +
+                'last:{{$last}}:end' +
+                'even:{{$even}}:end' +
+                'odd:{{$odd}}:end' +
+                '</div></div>';
+            element = compileElement(htmlString, scope);
+            elemHtml = element.html();
+            Should.exist(elemHtml);
+        });
+        it('should template the item correctly', function(){
+            elemHtml.should.containEql('name:name1:end');
+        });
+        it('should set $first property correctly', function(){
+            elemHtml.should.containEql('first:true:end');
+        });
+        it('should set $last property correctly', function(){
+            elemHtml.should.containEql('last:true:end');
+        });
+        it('should set $even property correctly', function(){
+            elemHtml.should.containEql('even:true:end');
+        });
+        it('should set $odd property correctly', function(){
+            elemHtml.should.containEql('odd:false:end');
+        });
+    });
     describe('validation', function(){
         it('should require a properly formatted datasource directive', function(){
-            scope.users = {
+            scope.items = {
                 get: function(first, last){
 
                 }
