@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('infinity-scroller', [])
-.directive('infinityScroll', function($log, $injector, $parse){
+.directive('infinityScroll', function($log, $injector, $parse, $q, $animate){
     function isDataSource(dataSource){
         return dataSource && angular.isDefined(dataSource) &&
             dataSource.get && angular.isDefined(dataSource.get) &&
@@ -29,26 +29,41 @@ angular.module('infinity-scroller', [])
         dataSource.$$itemName = match[1];
         return dataSource;
     }
-    function linkFun(scope, element, attrs, controller, transcludeFun){
+    var viewPort = {
+        direction: 'forward',
+        firstItem: -1,
+        finalItem: -1,
+    };
+    var linkFun = function(scope, element, attrs, controller, transcludeFun){
         var dataSource = getDataSource(scope, attrs.infinityScroll);
-        var items = dataSource.get(0, 9);
-        for (var i = 0; i < items.length; i++) {
-            transcludeFun(function(clone, innerScope){
-                innerScope[dataSource.$$itemName] = items[i];
-                innerScope.$first = i === 0;
-                innerScope.$last = i === (items.length - 1);
-                // jshint bitwise: false
-                innerScope.$odd = !(innerScope.$even = (i&1) === 0);
-                // jshint bitwise: true
-                element.after(clone);
-            });
-        }
+        viewPort.lastNode = viewPort.prePadding;
+        $q.when(dataSource.get(0, 9)).then(function(items){
+            for (var i = 0; i < items.length; i++) {
+                transcludeFun(function(clone, innerScope){
+                    innerScope[dataSource.$$itemName] = items[i];
+                    innerScope.$first = i === 0;
+                    innerScope.$last = i === (items.length - 1);
+                    // jshint bitwise: false
+                    innerScope.$odd = !(innerScope.$even = (i&1) === 0);
+                    // jshint bitwise: true
+                    $animate.enter(clone, null, viewPort.lastNode);
+                    viewPort.lastNode = clone;
+                });
+            }
+        });
+    }
+    function compileFun(element, attrs){
+        viewPort.prePadding = angular.element('<div></div>');
+        console.log(viewPort.prePadding.html());
+        viewPort.postPadding = angular.element('<div></div>');
+        element.after(viewPort.prePadding, viewPort.postPadding);
+        return linkFun;
     }
     return {
         restrict: 'A',
         transclude: 'element',
         priority: 1000,
         terminal: true,
-        link: linkFun
+        compile: compileFun
     };
 });
